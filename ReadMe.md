@@ -40,7 +40,7 @@ $ sudo make install
 进入./CtoPython/PyDOC
 
 1.测试的内容修改module_app_model.py中第8行的内容：
-program-n = {程序名}（程序名的内容包含：nm、objdump、readelf、xmllint、mp3gain、magick、tiffsplit、jpegtran，一共8个程序）
+program-n = {程序名}（程序名的内容包含：nm、objdump、readelf、libxml、mp3gain、magick、tiffsplit、libjpeg，一共8个程序）
 比如：program-n = "nm"
 
 2.测试的内容修改module_app_model.py中第16行的内容：
@@ -212,3 +212,25 @@ $ ./afl-cov -d ../jpg_out -e "../jpeg-9e/jpegtran AFL_FILE" -c ../jpeg-9e --enab
 $ python afl-showmap.py -f ../jpg_out -p jpegtran
 最后jpg_out文件夹打包以供数据分析和统计
 ~~~
+
+### 步骤3：记录测试过程中的必须步骤
+
+ssh连接：ssh zhongyuan_peng@36.137.226.47 -p 11130
+
+密码：casia123
+
+执行服务器命令：sudo /data/zhongyuan_peng/anaconda3/envs/fuzz/bin/python module_app_model.py
+
+sudo /data/zhongyuan_peng/anaconda3/envs/fuzz/bin/python module_app.py
+
+scp连接：
+
+scp -P 11130 zhongyuan_peng@36.137.226.47:/data2/ghc/fuzz/test_env/gif-dpsk7b/test.tar.gz D:\school-works\paper-fighting\download-exchange
+
+tar打包： tar -czvf 123.tar.gz 123 456
+
+查看进程并杀死： ps -ef | grep 进程名字；kill -9 PID(第2个数字)
+
+针对afl-cov不能用的问题：[afl覆盖率统计工具afl-cov常见问题总结-CSDN博客](https://blog.csdn.net/happygogf/article/details/106433043)
+
+scp -P 11130 zhongyuan_peng@36.137.226.47:/data2/ghc/fuzz/result.tar.gz D:\school-works\paper-fighting\重启项目\实验结果\dpsk7b

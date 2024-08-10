@@ -138,8 +138,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/others/elf/ -o ../nm_out ../binutils-2.27/binutils/nm-new -a @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../nm_out -e "../binutils-2.27/binutils/nm-new -a AFL_FILE" -c ../binutils-2.27/binutils --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../nm_out -p nm
 最后将nm_out文件夹打包以供数据分析和统计
 
 2.objdump
@@ -148,8 +146,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/others/elf/ -o ../objdump_out ../binutils-2.27/binutils/objdump -x -a -d @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../objdump_out -e "../binutils-2.27/binutils/objdump -x -a -d AFL_FILE" -c ../binutils-2.27/binutils --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../objdump_out -p objdump
 最后将objdump_out文件夹打包以供数据分析和统计
 
 3.readelf
@@ -158,8 +154,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/others/elf/ -o ../readelf_out ../binutils-2.27/binutils/readelf -a @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../readelf_out -e "../binutils-2.27/binutils/readelf -a AFL_FILE" -c ../binutils-2.27/binutils --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../readelf_out -p readelf
 最后readelf_out文件夹打包以供数据分析和统计
 
 4.xmllint
@@ -168,8 +162,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i ../xml_in/ -o ../xml_out ../libxml2-2.9.2/xmllint --valid --recover @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../xml_out -e "../libxml2-2.9.2/xmllint --valid --recover AFL_FILE" -c ../libxml2-2.9.2 --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../xml_out -p xmllint
 最后xml_out文件夹打包以供数据分析和统计
 
 5.mp3gain
@@ -178,8 +170,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i ../mp3_in/ -o ../mp3_out ../mp3gain-1.5.2/mp3gain @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../mp3_out -e "../mp3gain-1.5.2/mp3gain AFL_FILE" -c ../mp3gain-1.5.2 --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../mp3_out -p mp3gain
 最后mp3_out文件夹打包以供数据分析和统计
 
 6.magick
@@ -188,8 +178,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/images/gif -o ../gif_out ../ImageMagick-7.1.0-49/utilities/magick identify @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../gif_out -e "../ImageMagick-7.1.0-49/utilities/magick identify AFL_FILE" -c ../ImageMagick-7.1.0-49/utilities --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../gif_out -p magick
 最后gif_out文件夹打包以供数据分析和统计
 
 7.tiffsplit
@@ -198,8 +186,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i ../tiff_in/ -o ../tiff_out ../libtiff-Release-v3-9-7/tools/tiffsplit @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../tiff_out -e "../libtiff-Release-v3-9-7/tools/tiffsplit AFL_FILE" -c ../libtiff-Release-v3-9-7/tools/ --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../tiff_out -p tiffsplit
 最后tiff_out文件夹打包以供数据分析和统计
 
 8.jpegtran
@@ -208,8 +194,6 @@ $ cd afl-2.52b
 $ ./afl-fuzz -i ../jpg_in/ -o ../jpg_out ../jpeg-9e/jpegtran @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../jpg_out -e "../jpeg-9e/jpegtran AFL_FILE" -c ../jpeg-9e --enable-branch-coverage --overwrite
-待上面命令执行完毕后进入afl-2.52b，执行下面命令
-$ python afl-showmap.py -f ../jpg_out -p jpegtran
 最后jpg_out文件夹打包以供数据分析和统计
 ~~~
 

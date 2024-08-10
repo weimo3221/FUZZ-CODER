@@ -86,6 +86,7 @@ def get_output():
         pos = generated_text.find('",')
         generated_text = generated_text[:pos + 1] + generated_text[pos + 2:]
         num_list = text_deal(generated_text)
+        num_list = [x for x in num_list if x.isdigit()]
         for i in range(len(num_list) // 2):
             dic.append([int(num_list[i*2]), int(num_list[i*2+1])])
         results.append({

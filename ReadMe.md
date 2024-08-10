@@ -196,11 +196,3 @@ $ ./afl-fuzz -i ../jpg_in/ -o ../jpg_out ../jpeg-9e/jpegtran @@
 $ ./afl-cov -d ../jpg_out -e "../jpeg-9e/jpegtran AFL_FILE" -c ../jpeg-9e --enable-branch-coverage --overwrite
 最后jpg_out文件夹打包以供数据分析和统计
 ~~~
-
-
-
-查看进程并杀死： ps -ef | grep 进程名字；kill -9 PID(第2个数字)
-
-针对afl-cov不能用的问题：[afl覆盖率统计工具afl-cov常见问题总结-CSDN博客](https://blog.csdn.net/happygogf/article/details/106433043)
-
-scp -P 11130 zhongyuan_peng@36.137.226.47:/data2/ghc/fuzz/result.tar.gz D:\school-works\paper-fighting\重启项目\实验结果\dpsk7b

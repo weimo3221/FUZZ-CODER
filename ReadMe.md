@@ -175,7 +175,7 @@ $ ./afl-cov -d ../mp3_out -e "../mp3gain-1.5.2/mp3gain AFL_FILE" -c ../mp3gain-1
 6.magick
 $ screen -S {session名字}（注意不要重复）
 $ cd afl-2.52b
-$ ./afl-fuzz -i testcases/images/gif -o ../gif_out ../ImageMagick-7.1.0-49/utilities/magick identify @@
+$ ./afl-fuzz -m none -i testcases/images/gif -o ../gif_out ../ImageMagick-7.1.0-49/utilities/magick identify @@
 待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
 $ ./afl-cov -d ../gif_out -e "../ImageMagick-7.1.0-49/utilities/magick identify AFL_FILE" -c ../ImageMagick-7.1.0-49/utilities --enable-branch-coverage --overwrite
 最后gif_out文件夹打包以供数据分析和统计
@@ -197,21 +197,7 @@ $ ./afl-cov -d ../jpg_out -e "../jpeg-9e/jpegtran AFL_FILE" -c ../jpeg-9e --enab
 最后jpg_out文件夹打包以供数据分析和统计
 ~~~
 
-### 步骤3：记录测试过程中的必须步骤
 
-ssh连接：ssh zhongyuan_peng@36.137.226.47 -p 11130
-
-密码：casia123
-
-执行服务器命令：sudo /data/zhongyuan_peng/anaconda3/envs/fuzz/bin/python module_app_model.py
-
-sudo /data/zhongyuan_peng/anaconda3/envs/fuzz/bin/python module_app.py
-
-scp连接：
-
-scp -P 11130 zhongyuan_peng@36.137.226.47:/data2/ghc/fuzz/test_env/gif-dpsk7b/test.tar.gz D:\school-works\paper-fighting\download-exchange
-
-tar打包： tar -czvf 123.tar.gz 123 456
 
 查看进程并杀死： ps -ef | grep 进程名字；kill -9 PID(第2个数字)
 

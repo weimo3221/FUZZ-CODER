@@ -30,7 +30,7 @@ if __name__ == '__main__':
     elif program == "jpegtran":
         command = " ../jpeg-9e/jpegtran "
     elif program == "mp3gain":
-        command = " ../mp3gain/mp3gain "
+        command = " ../mp3gain-1.5.2/mp3gain "
     elif program == "magick":
         command = " ../ImageMagick-7.1.0-49/utilities/magick identify "
     elif program == "tiffsplit":

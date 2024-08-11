@@ -25,7 +25,7 @@ $ unzip afl-cov-master.zip
 ~~~
 $ tar -xf afl-latest.tgz
 将用于llm测试的afl-fuzz.c代码复制到AFL中
-$ cp afl-fuzz-time-llm.c ./afl-2.52b
+$ cp afl-fuzz-time-llm.c ./afl-2.52b/afl-fuzz.c
 $ cd afl-2.52b
 $ sudo make
 $ sudo make install

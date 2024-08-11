@@ -29,6 +29,10 @@ $ cp afl-fuzz-time-llm.c ./afl-2.52b/afl-fuzz.c
 $ cd afl-2.52b
 $ sudo make
 $ sudo make install
+(到这里是为了安装afl-gcc和afl-g++)
+$ cp afl-fuzz-time-llm.c afl-fuzz.c
+$ sudo make
+(这里是为了换成能运行大模型的afl) 
 ~~~
 
 ## 步骤2：在8个程序中测试某个大模型

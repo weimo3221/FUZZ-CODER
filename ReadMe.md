@@ -23,6 +23,7 @@ $ unzip afl-cov-master.zip
 - 配置最基础的afl-fuzz，这一步可以做可以不做，主要是为了方便其他afl工具的使用，比如afl-gcc等
 
 ~~~
+#################2.52b安装步骤如下#################
 $ tar -xf afl-latest.tgz
 将用于llm测试的afl-fuzz.c代码复制到AFL中
 $ cp afl-fuzz-time-llm.c ./afl-2.52b/afl-fuzz.c
@@ -31,6 +32,17 @@ $ sudo make
 $ sudo make install
 (到这里是为了安装afl-gcc和afl-g++)
 $ cp afl-fuzz-time-llm.c afl-fuzz.c
+$ sudo make
+(这里是为了换成能运行大模型的afl) 
+#################2.57b安装步骤如下#################
+$ unzip afl-2.57b.zip
+$ cd afl-2.57b
+$ chmod 777 afl-gcc afl-showmap
+$ cp afl-fuzz-ori.c afl-fuzz.c
+$ sudo make
+$ sudo make install
+(到这里是为了安装afl-gcc和afl-g++)
+$ cp afl-fuzz-seq2seq.c afl-fuzz.c
 $ sudo make
 (这里是为了换成能运行大模型的afl) 
 ~~~

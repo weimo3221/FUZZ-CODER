@@ -1,215 +1,260 @@
-## 步骤1：安装软件环境
+## STEP 1: Installation of the software environment
 
-- 利用conda搭建3.9环境(或者有3.9环境的python也可以)
+**Read this in other languages: [English](README.md), [中文](README_zh.md).**
+
+- Build a Python 3.9 environment with conda (or have a Python 3.9 as well)
 
 ```
 $ conda create -n work python=3.9
 $ conda activate work
 ```
-- 安装相关库(注意这里使用的cuda的版本，cuda的版本不一定要统一，但是其他python库的版本必须统一)
+- Install the relevant libraries (note the version of cuda used here, the version of cuda does not have to be uniform, but the versions of the other python libraries must be)
 
 ```
 $ pip install torch==1.12.0+cu113 torchvision==0.13.0+cu113 torchaudio==0.12.0 --extra-index-url https://download.pytorch.org/whl/cu113
 $ pip install pandas tqdm einops timm flask 
 ```
-- 安装afl-cov
+- Install afl-cov
 
 ~~~
 $ apt-get install lcov
 $ unzip afl-cov-master.zip
-然后就可以看到一个afl-cov-master的文件夹
+Then you can see an afl-cov-master folder()
 ~~~
 
-- 配置最基础的afl-fuzz，这一步可以做可以不做，主要是为了方便其他afl工具的使用，比如afl-gcc等
+- Install afl-fuzz
 
 ~~~
-#################2.52b安装步骤如下#################
+#################2.52b is installed as follows#################
 $ tar -xf afl-latest.tgz
-将用于llm测试的afl-fuzz.c代码复制到AFL中
+Copy afl-fuzz.c code for llm testing to AFL
 $ cp afl-fuzz-time-llm.c ./afl-2.52b/afl-fuzz.c
 $ cd afl-2.52b
 $ sudo make
 $ sudo make install
-(到这里是为了安装afl-gcc和afl-g++)
+(To install afl-gcc and afl-g++)
 $ cp afl-fuzz-time-llm.c afl-fuzz.c
 $ sudo make
-(这里是为了换成能运行大模型的afl) 
-#################2.57b安装步骤如下#################
+(To switching to afl which can run large language models)
+#################2.57b is installed as follows#################
 $ unzip afl-2.57b.zip
 $ cd afl-2.57b
 $ chmod 777 afl-gcc afl-showmap
 $ cp afl-fuzz-ori.c afl-fuzz.c
 $ sudo make
 $ sudo make install
-(到这里是为了安装afl-gcc和afl-g++)
+(To install afl-gcc and afl-g++)
 $ cp afl-fuzz-seq2seq.c afl-fuzz.c
 $ sudo make
-(这里是为了换成能运行大模型的afl) 
+(To switching to afl which can run large language models)
 ~~~
 
-## 步骤2：在8个程序中测试某个大模型
+## STEP 2: Testing a large language model in 8 programs
 
-**请务必按照在每次测试前按照以下步骤进行测试**
+**Please be sure to follow the steps below before each test**
 
-### 步骤2.1：配置搭载llm的服务器
+### STEP 2.1: Configuring the server with llm
 
 ~~~
-进入./CtoPython/PyDOC
+Go to ./CtoPython/PyDOC
 
-1.测试的内容修改module_app_model.py中第8行的内容：
-program-n = {程序名}（程序名的内容包含：nm、objdump、readelf、libxml、mp3gain、magick、tiffsplit、libjpeg，一共8个程序）
-比如：program-n = "nm"
+1.Modify the contents of line 8 in module_app_model.py:
 
-2.测试的内容修改module_app_model.py中第16行的内容：
-base_model = {大模型的文件夹所在位置}
-比如：base_model = "/data2/hugo/fuzz/code_llama/model-checkpoint/model-checkpoint200/dpsk7b/cpfs01/shared/public/yj411294/fuzzy_test/stanford_alpaca/models/dpsk-7B/lr3e-5-ws100-wd0.0-bsz512/checkpoint-200"
+program-n = {program name}(The contents of the program name are included: nm、objdump、readelf、libxml、mp3gain、magick、tiffsplit、libjpeg)
+For example: program-n = "nm"
 
-3.有多个卡进行测试，需要修改module_app_model.py和module_client.py中的端口号，避免导致冲突。
-保证module_app_model.py第106行中port={端口号}和module_client.py第15行url = 'http://127.0.0.1:{端口号}/'相同
+2.Modify the contents of line 16 in module_app_model.py:
 
-4.新建一个session运行llm的服务器
-$ screen -S {session名字}（注意不要重复）
-进入./CtoPython/PyDOC
+base_model = {Location of the folder for large language models}
+For example: base_model = "/data2/hugo/fuzz/code_llama/model-checkpoint/model-checkpoint200/dpsk7b/cpfs01/shared/public/yj411294/fuzzy_test/stanford_alpaca/models/dpsk-7B/lr3e-5-ws100-wd0.0-bsz512/checkpoint-200"
+
+3.Having multiple graphics cards to test requires modifying the port numbers in module_app_model.py and module_client.py to avoid causing conflicts:
+
+Ensure that “port = {port number}” in module_app_model.py line 106 is the same as “url = 'http://127.0.0.1:{port number}/'” in module_client.py line 15
+
+4.Create a new session to run llm's server
+$ screen -S {session name}
+Go to ./CtoPython/PyDOC
 $ python module_app_model.py
-$ ctrl+a+d退出当前session（下一次进入该session通过screen -r {session名字}）
+$ ctrl+a+d Quit the current session
 ~~~
 
-### 步骤2.2：安装对应程序（一共8个）
+### STEP 2.2: Installation of test programs (8 in total)
 
 ~~~
-根据步骤2.1中第1步选择的程序进行安装，8个程序的安装命令如下：
-****注意，即使已经安装过需要删除重新安装****
+Installation is performed according to the programs selected in step 1 of step 2.1, and the installation commands for the eight programs are as follows:
+****Note that even if you have already installed it, you need to remove it and reinstall it.****
 
-1.objdump、nm和readelf的安装
+1.Installation of objdump, nm and readelf
+
 $ tar -xf binutils-2.27.tar.gz
 $ cd binutils-2.27
-其中$afl-gcc$和$afl-g++$是这两个编译器的路径，这两个编译器可以在afl-2.52b文件夹中找到
+
+Where $afl-gcc$ and $afl-g++$ are the paths to these two compilers, which can be found in the afl-2.52b folder
+
 $ ./configure CC="$afl-gcc$ -fprofile-arcs -ftest-coverage" CXX="$afl-g++$ -fprofile-arcs -ftest-coverage"
-比如举个例子，可以写成如下:
+For example:
 $ ./configure CC="/usr/local/bin/afl-gcc -fprofile-arcs -ftest-coverage" CXX="/usr/local/bin/afl-g++ -fprofile-arcs -ftest-coverage"
 $ make
-(如果你想将binutils安装的话，可以继续执行sudo make install，测试的话到上面一步即可)
 
-2.xmllint的安装
+
+2.Installation of xmllint
+
 $ tar -xf libxml2-2.9.2.tar.gz
 $ cd libxml2-2.9.2
 $ ./autogen.sh
-其中$afl-gcc$和$afl-g++$是这两个编译器的路径，这两个编译器可以在afl-2.52b文件夹中找到
+
+Where $afl-gcc$ and $afl-g++$ are the paths to these two compilers, which can be found in the afl-2.52b folder
+
 $ ./configure --disable-shared CC="$afl-gcc$ -fprofile-arcs -ftest-coverage" CXX="$afl-g++$ -fprofile-arcs -ftest-coverage"
-比如举个例子，可以写成如下
+For example:
 $ ./configure --disable-shared CC="/usr/local/bin/afl-gcc -fprofile-arcs -ftest-coverage" CXX="/usr/local/bin/afl-g++ -fprofile-arcs -ftest-coverage"
 $ make
-(如果你想将libxml2安装的话，可以继续执行sudo make install，测试的话到上面一步即可)
 
-3.mp3gain的安装
+
+3.Installation of mp3gain
+
 $ tar -xf mp3gain-1.5.2.tar.gz
 $ cd mp3gain-1.5.2/
 $ vim Makefile
-修改其中CCS的值，把gcc改为$afl-gcc$，$afl-gcc$是afl编译器的路径
+
+Change the value of CC in it, change gcc to $afl-gcc$, $afl-gcc$ is the path to the afl compiler
+
 CC=$afl-gcc$ -fprofile-arcs -ftest-coverage
-比如举个例子:
+For example:
 CC=/usr/local/bin/afl-gcc -fprofile-arcs -ftest-coverage
 $ make
-(如果你想将mp3gain安装的话，可以继续执行sudo make install，测试的话到上面一步即可)
 
-4.magick的安装
+
+4.Installation of magick
+
 $ tar xvfz ImageMagick-7.1.0-49.tar.gz
 $ cd ImageMagick-7.1.0-49
 $ sudo apt-get install build-essential libjpeg-dev libpng-dev libtiff-dev libgif-dev zlib1g-dev libfreetype6-dev libfontconfig1-dev
-其中$afl-gcc$和$afl-g++$是这两个编译器的路径，这两个编译器可以在afl-2.52b文件夹中找到
+
+Where $afl-gcc$ and $afl-g++$ are the paths to these two compilers, which can be found in the afl-2.52b folder
+
 $ ./configure --disable-shared CC="$afl-gcc$ -fprofile-arcs -ftest-coverage" CXX="$afl-g++$ -fprofile-arcs -ftest-coverage"
-比如举个例子，可以写成如下
+For example:
 $ ./configure --disable-shared CC="/usr/local/bin/afl-gcc -fprofile-arcs -ftest-coverage" CXX="/usr/local/bin/afl-g++ -fprofile-arcs -ftest-coverage" 
 $ make
-(如果你想将ImageMagick安装的话，可以继续执行sudo make install，测试的话到上面一步即可)
 
-5.tiffsplit的安装
+
+5.Installation of tiffsplit
+
 $ tar -xf libtiff-Release-v3-9-7.tar.gz
 $ cd libtiff-Release-v3-9-7
-其中$afl-gcc$和$afl-g++$是这两个编译器的路径，这两个编译器可以在afl-2.52b文件夹中找到
+
+Where $afl-gcc$ and $afl-g++$ are the paths to these two compilers, which can be found in the afl-2.52b folder
+
 $ ./configure --disable-shared CC="$afl-gcc$ -fprofile-arcs -ftest-coverage" CXX="$afl-g++$ -fprofile-arcs -ftest-coverage"
-比如举个例子，可以写成如下
+For example:
 $ ./configure --disable-shared CC="/usr/local/bin/afl-gcc -fprofile-arcs -ftest-coverage" CXX="/usr/local/bin/afl-g++ -fprofile-arcs -ftest-coverage"
 $ make
-(如果你想将libtiff安装的话，可以继续执行sudo make install，测试的话到上面一步即可)
 
-6.jpegtran的安装
+
+6.Installation of jpegtran
+
 $ tar -xf jpegsrc.v9e.tar.gz
 $ cd jpeg-9e
-其中$afl-gcc$和$afl-g++$是这两个编译器的路径，这两个编译器可以在afl-2.52b文件夹中找到
+
+Where $afl-gcc$ and $afl-g++$ are the paths to these two compilers, which can be found in the afl-2.52b folder
+
 $ ./configure --disable-shared CC="$afl-gcc$ -fprofile-arcs -ftest-coverage" CXX="$afl-g++$ -fprofile-arcs -ftest-coverage"
-比如举个例子，可以写成如下
+For example:
 $ ./configure --disable-shared CC="/usr/local/bin/afl-gcc -fprofile-arcs -ftest-coverage" CXX="/usr/local/bin/afl-g++ -fprofile-arcs -ftest-coverage" 
 $ make
-(如果你想将libjpeg安装的话，可以继续执行sudo make install，测试的话到上面一步即可)
 ~~~
 
-### 步骤2.3：测试程序并进行数据处理（一共8个）
+### STEP 2.3: Fuzz programs and data processing (8 in total)
 
 ~~~
-根据步骤2.1和步骤2.2选择的程序进行测试和测试后的数据处理，8个程序的测试命令如下：
+The fuzzy test and the data processing after the fuzzy test are performed according to the procedures selected in Steps 2.1 and 2.2, and the test commands for the eight procedures are as follows:
 
 1.nm
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/others/elf/ -o ../nm_out ../binutils-2.27/binutils/nm-new -a @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../nm_out -e "../binutils-2.27/binutils/nm-new -a AFL_FILE" -c ../binutils-2.27/binutils --enable-branch-coverage --overwrite
-最后将nm_out文件夹打包以供数据分析和统计
+
 
 2.objdump
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/others/elf/ -o ../objdump_out ../binutils-2.27/binutils/objdump -x -a -d @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../objdump_out -e "../binutils-2.27/binutils/objdump -x -a -d AFL_FILE" -c ../binutils-2.27/binutils --enable-branch-coverage --overwrite
-最后将objdump_out文件夹打包以供数据分析和统计
+
 
 3.readelf
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i testcases/others/elf/ -o ../readelf_out ../binutils-2.27/binutils/readelf -a @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../readelf_out -e "../binutils-2.27/binutils/readelf -a AFL_FILE" -c ../binutils-2.27/binutils --enable-branch-coverage --overwrite
-最后readelf_out文件夹打包以供数据分析和统计
+
 
 4.xmllint
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i ../xml_in/ -o ../xml_out ../libxml2-2.9.2/xmllint --valid --recover @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../xml_out -e "../libxml2-2.9.2/xmllint --valid --recover AFL_FILE" -c ../libxml2-2.9.2 --enable-branch-coverage --overwrite
-最后xml_out文件夹打包以供数据分析和统计
+
 
 5.mp3gain
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i ../mp3_in/ -o ../mp3_out ../mp3gain-1.5.2/mp3gain @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../mp3_out -e "../mp3gain-1.5.2/mp3gain AFL_FILE" -c ../mp3gain-1.5.2 --enable-branch-coverage --overwrite
-最后mp3_out文件夹打包以供数据分析和统计
+
 
 6.magick
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -m none -i testcases/images/gif -o ../gif_out ../ImageMagick-7.1.0-49/utilities/magick identify @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../gif_out -e "../ImageMagick-7.1.0-49/utilities/magick identify AFL_FILE" -c ../ImageMagick-7.1.0-49/utilities --enable-branch-coverage --overwrite
-最后gif_out文件夹打包以供数据分析和统计
+
 
 7.tiffsplit
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i ../tiff_in/ -o ../tiff_out ../libtiff-Release-v3-9-7/tools/tiffsplit @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../tiff_out -e "../libtiff-Release-v3-9-7/tools/tiffsplit AFL_FILE" -c ../libtiff-Release-v3-9-7/tools/ --enable-branch-coverage --overwrite
-最后tiff_out文件夹打包以供数据分析和统计
+
 
 8.jpegtran
-$ screen -S {session名字}（注意不要重复）
+
+$ screen -S {session name}
 $ cd afl-2.52b
 $ ./afl-fuzz -i ../jpg_in/ -o ../jpg_out ../jpeg-9e/jpegtran @@
-待Fuzz完毕后进入afl-cov-master文件夹，执行下面命令
+
+When Fuzz is complete go to the afl-cov-master folder and execute the following command
+
 $ ./afl-cov -d ../jpg_out -e "../jpeg-9e/jpegtran AFL_FILE" -c ../jpeg-9e --enable-branch-coverage --overwrite
-最后jpg_out文件夹打包以供数据分析和统计
 ~~~

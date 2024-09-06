@@ -1,1 +1,0 @@
-RuntimeError('Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu! (when checking argument for argument index in method wrapper__index_select)')

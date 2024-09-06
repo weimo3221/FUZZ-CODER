@@ -1,6 +1,6 @@
 ## STEP 1: Installation of the software environment
 
-**Read this in other languages: [English](README.md), [中文](README_zh.md).**
+**Read this in other languages: [English](ReadMe.md), [中文](ReadMe_zh.md).**
 
 - Build a Python 3.9 environment with conda (or have a Python 3.9 as well)
 
